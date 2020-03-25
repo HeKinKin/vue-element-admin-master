@@ -10,6 +10,22 @@
         :expand-on-click-node="false"
         :render-content="renderContent">
       </el-tree>
+
+      <el-dialog title="新增部门" :visible.sync="dialogFormVisible">
+        <el-form ref="form" :model="form" size="medium">
+          <el-form-item label="部门:">
+            <el-input
+              v-model="form.departmentName"
+              clearable
+            />
+          </el-form-item>
+        </el-form>
+        <div slot="footer" class="dialog-footer">
+          <el-button @click="insertFalse">取 消</el-button>
+          <el-button type="primary" @click="insert">确 定</el-button>
+        </div>
+      </el-dialog>
+
     </div>
   </div>
 </template>
@@ -19,54 +35,50 @@
 
   export default {
     data() {
-      const data = [{
-        id: 1,
-        label: '一级 1',
-        children: [{
-          id: 4,
-          label: '二级 1-1',
-          children: [{
-            id: 9,
-            label: '三级 1-1-1'
-          }, {
-            id: 10,
-            label: '三级 1-1-2'
-          }]
-        }]
-      }, {
-        id: 2,
-        label: '一级 2',
-        children: [{
-          id: 5,
-          label: '二级 2-1'
-        }, {
-          id: 6,
-          label: '二级 2-2'
-        }]
-      }, {
-        id: 3,
-        label: '一级 3',
-        children: [{
-          id: 7,
-          label: '二级 3-1'
-        }, {
-          id: 8,
-          label: '二级 3-2'
-        }]
-      }];
+      const data = [];
       return {
         data: JSON.parse(JSON.stringify(data)),
-        data: JSON.parse(JSON.stringify(data))
+        dialogFormVisible: false,
+        form: {
+          departmentName: ''
+        },
+        data1: []
+
       }
+    },
+
+    created() {
+      this.getOrganization();
     },
 
     methods: {
       append(data) {
-        const newChild = { id: id++, label: 'testtest', children: [] };
-        if (!data.children) {
-          this.$set(data, 'children', []);
+        this.data1 = data,
+        this.dialogFormVisible = true
+      },
+
+      insert(){
+        const workThis = this
+        const newChild = { id: id++, label: workThis.form.departmentName, children: [] };
+        if (!workThis.data1.children) {
+          workThis.$set(this.data1, 'children', []);
         }
-        data.children.push(newChild);
+        workThis.data1.children.push(newChild);
+        // 请求后台
+        this.$axios({
+          method: 'post',
+          url: 'api/consumer/insertOrganization',
+          data: {
+            'label': newChild.label,
+            'superOId': this.data1.oId
+          }
+        }).then(function(res) {
+          console.log("进入了")
+          workThis.dialogFormVisible = false
+        })
+      },
+      insertFalse(){
+        this.dialogFormVisible = false
       },
 
       remove(node, data) {
@@ -74,6 +86,18 @@
         const children = parent.data.children || parent.data;
         const index = children.findIndex(d => d.id === data.id);
         children.splice(index, 1);
+      },
+
+      getOrganization() {
+        const workThis = this
+        workThis.$axios({
+          method: 'post',
+          url: 'api/consumer/getOrganization',
+          data: {
+          }
+        }).then(function(res) {
+          workThis.data = res.data.data
+        })
       },
 
       renderContent(h, { node, data, store }) {
