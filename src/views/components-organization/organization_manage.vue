@@ -13,7 +13,7 @@
 
       <el-dialog title="新增部门" :visible.sync="dialogFormVisible">
         <el-form ref="form" :model="form" size="medium">
-          <el-form-item label="部门:">
+          <el-form-item label="部门名称:">
             <el-input
               v-model="form.departmentName"
               clearable
@@ -40,9 +40,11 @@
         data: JSON.parse(JSON.stringify(data)),
         dialogFormVisible: false,
         form: {
-          departmentName: ''
+          departmentName: '',
+          departmentId: ''
         },
-        data1: []
+        data1: [],
+        data2: []
 
       }
     },
@@ -69,11 +71,11 @@
           method: 'post',
           url: 'api/consumer/insertOrganization',
           data: {
-            'label': newChild.label,
-            'superOId': this.data1.oId
+            'name': newChild.label,
+            'id': workThis.form.departmentId,
+            'superUnitOId': workThis.data1.oId
           }
         }).then(function(res) {
-          console.log("进入了")
           workThis.dialogFormVisible = false
         })
       },
@@ -82,6 +84,17 @@
       },
 
       remove(node, data) {
+        const workThis = this
+        workThis.data2 = data,
+        workThis.$axios({
+          method: 'post',
+          url: 'api/consumer/deleteOrganization',
+          data: {
+            'oId': workThis.data2.oId
+          }
+        }).then(function(res) {
+
+        })
         const parent = node.parent;
         const children = parent.data.children || parent.data;
         const index = children.findIndex(d => d.id === data.id);
