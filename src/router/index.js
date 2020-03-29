@@ -13,11 +13,9 @@ import Layout from '@/layout'
 // import nestedRouter from './modules/nested'
 import staffRouter from './modules/staff'
 import organizationRouter from './modules/organization'
-import memberRouter from './modules/member'
-import campaignRouter from  './modules/campaign'
-import ruleRouter from './modules/rule'
+import staffUpdateRouter from  './modules/staff_update'
 import componentsRouter from './modules/components'
-import floatWaterRouter from './modules/floatWater'
+import contractRouter from "./modules/contract";
 /**
  * Note: sub-menu only appear when route children.length >= 1
  * Detail see: https://panjiachen.github.io/vue-element-admin-site/guide/essentials/router-and-nav.html
@@ -177,32 +175,12 @@ export const asyncRoutes = [
     ]
   },
 
-  // 图标
-  // {
-  //   path: '/icon',
-  //   component: Layout,
-  //   children: [
-  //     {
-  //       path: 'index',
-  //       component: () => import('@/views/icons/index'),
-  //       name: 'Icons',
-  //       meta: { title: 'icons', icon: 'icon', noCache: true }
-  //     }
-  //   ]
-  // },
-
   /** when your routing map is too long, you can split it into small modules **/
   staffRouter,
   organizationRouter,
-  memberRouter,
-  campaignRouter,
+  staffUpdateRouter,
+  contractRouter,
   componentsRouter,
-  ruleRouter,
-  floatWaterRouter,
-  // chartsRouter,
-  // nestedRouter,
-  // tableRouter,
-
   {
     path: '/error',
     component: Layout,

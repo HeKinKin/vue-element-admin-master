@@ -10,14 +10,6 @@ const staffRouter = {
     title: 'staff',
     icon: 'chart'
   },
-  // children: [
-  //   {
-  //     path: 'memberList',
-  //     component: () => import('@/component/memberComponent/showMemberList'),
-  //     name: 'memberList',
-  //     meta: { title: 'memberList'}
-  //   }
-  // ]
   children: [
     {
       path: 'staffHome',
@@ -30,6 +22,12 @@ const staffRouter = {
       component: () => import('@/views/components-staff/staff_insert'),
       name: 'newStaffInsert',
       meta: { title: 'newStaffInsert' }
+    },
+    {
+      path: 'staff_message',
+      component: () => import('@/views/components-staff/staff_message'),
+      name: 'staff_message',
+      meta: { title: 'staff_message' }
     }
   ]
 }

@@ -92,7 +92,13 @@ export default {
     organizationManage: '组织架构管理',
     organizationStructure: '部门架构',
     position: '职能相关',
-    staffHome: '员工信息'
+    staffHome: '员工信息',
+    staffUpdate: '员工变动管理',
+    staffUpdateMessafe: '变动总揽',
+    contract: '职内信息管理',
+    contractHome: '员工合同管理',
+    money: '薪资管理',
+    check: '考勤信息管理'
   },
   navbar: {
     dashboard: '首页',

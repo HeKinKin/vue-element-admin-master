@@ -5,6 +5,8 @@
       <div style="padding-top: 8px;background-color: #f2f2f2">
         <div style="margin-left: 10px">
 
+
+
           <el-form :inline="true" class="demo-form-inline">
             <el-form-item label="手机号">
               <el-input
@@ -31,44 +33,6 @@
                 size="mini"
               />
             </el-form-item>
-          </el-form>
-
-          <el-form :inline="true" class="demo-form-inline">
-            <el-form-item label="职位">
-              <el-select
-                v-model="positionOId"
-                placeholder="请选择"
-                clearable
-                size="mini"
-                @change="getPositions()"
-              >
-                <el-option
-                  v-for="item in positionList"
-                  :label="item.name"
-                  :value="item.oId"></el-option>
-                <el-option style="width: auto" :disabled="true" :value="null">
-                  <span>无</span>
-                </el-option>
-              </el-select>
-            </el-form-item>
-
-            <el-form-item label="部门">
-              <el-select
-                v-model="organizationOId"
-                placeholder="请选择"
-                clearable
-                size="mini"
-                @change="getOrganization()"
-              >
-                <el-option
-                  v-for="item in organizationList"
-                  :label="item.name"
-                  :value="item.oId"></el-option>
-                <el-option style="width: auto" :disabled="true" :value="null">
-                  <span>无</span>
-                </el-option>
-              </el-select>
-            </el-form-item>
 
             <span style="margin-left: 250px">
               <el-form-item>
@@ -79,37 +43,76 @@
         </div>
       </div>
     </div>
-
-    <el-dialog title="员工信息编辑" :visible.sync="bianji">
-      <el-form
-        ref="form"
-        :model="form"
-      >
-        <el-form-item label="员工ID" prop="mobile">
-          <el-input v-model="form.staffNumber" :disabled="true" />
-        </el-form-item>
-        <el-form-item label="会员手机号" prop="cardNo">
-          <el-input v-model="form.staffTel"   />
-        </el-form-item>
-        <el-form-item label="会员姓名" prop="levelName">
-          <el-input v-model="form.staffName"   />
-        </el-form-item>
-        <el-form-item label="入职时间" prop="createTime">
-          <el-input v-model="form.organizationName" auto-complete="off" :disabled="true" />
-        </el-form-item>
-        <el-form-item label="部门" prop="growthValue">
-          <el-input v-model="form.positionName" auto-complete="off" :disabled="true" />
-        </el-form-item>
-        <el-form-item label="在职状况" prop="integralBalance">
-          <el-input v-model="form.status" auto-complete="off" :disabled="true" />
+    <div style="margin-left: 20px;margin-top: 10px">
+      <el-form >
+        <el-form-item>
+          <el-button type="primary" size="mini" @click="append">新增合同</el-button>
         </el-form-item>
       </el-form>
-      <div>
-        <el-button @click="bianji = false">取 消</el-button>
-        <el-button type="primary" @click="update1()">确 定</el-button>
-      </div>
-    </el-dialog>
+      <el-dialog title="新增合同" :visible.sync="dialogFormVisible">
+        <el-form ref="form" :model="form" size="mini">
+          <el-form-item label="员工工号:">
+            <el-input
+              v-model="form.departmentName"
+              clearable
+            />
+          </el-form-item>
+          <el-form-item label="所在部门:">
+            <el-input
+              v-model="form.departmentName"
+              clearable
+            />
+          </el-form-item>
+          <el-form-item label="合同名称:">
+            <el-input
+              v-model="form.departmentName"
+              clearable
+            />
+          </el-form-item>
+          <el-form-item label="合同内容:">
+            <el-input
+              v-model="form.departmentName"
+              clearable
+            />
+          </el-form-item>
+          <el-form-item label="签订时间">
+            <el-input
+              v-model="form.departmentName"
+              clearable
+            />
+          </el-form-item>
+          <el-form-item label="到期时间">
+            <el-input
+              v-model="form.departmentName"
+              clearable
+            />
+          </el-form-item>
+          <el-form-item label="基本工资">
+            <el-input
+              v-model="form.departmentName"
+              clearable
+            />
+          </el-form-item>
+          <el-form-item label="公基金比例">
+            <el-input
+              v-model="form.departmentName"
+              clearable
+            />
+          </el-form-item>
+          <el-form-item label="饭补">
+            <el-input
+              v-model="form.departmentName"
+              clearable
+            />
+          </el-form-item>
 
+        </el-form>
+        <div slot="footer" class="dialog-footer">
+          <el-button @click="insertFalse">取 消</el-button>
+          <el-button type="primary" @click="insert">确 定</el-button>
+        </div>
+      </el-dialog>
+    </div>
     <div style="margin-top:10px;margin-left:10px;margin-top: 20px">
       <div style="margin-top: 20px" />
       <el-table
@@ -126,49 +129,49 @@
         />
         <el-table-column
           fixed
-          prop="oId"
-          label="OID"
-          width="180"
-        />
-        <el-table-column
-          prop="staffNumber"
-          label="工号"
-          width="130"
-        />
-        <el-table-column
-          prop="staffName"
-          label="姓名"
-          width="130"
-        />
-        <el-table-column
-          prop="staffTel"
-          label="手机号"
-          width="130"
-        />
-        <el-table-column
-          prop="organizationName"
-          label="部门编号"
-          width="130"
-        />
-        <el-table-column
-          prop="positionName"
-          label="职位"
+          prop="staffId"
+          label="ID"
           width="150"
         />
         <el-table-column
-          prop="status"
-          label="是否在职"
+          prop="staffNumber"
+          label="工号工号"
+          width="150"
+        />
+        <el-table-column
+          prop="staffName"
+          label="员工姓名"
+          width="150"
+        />
+        <el-table-column
+          prop="staffTel"
+          label="合同名称"
+          width="150"
+        />
+        <el-table-column
+          prop="organizationName"
+          label="合同内容"
+          width="150"
+        />
+        <el-table-column
+          prop="positionName"
+          label="签订时间"
+          width="150"
+        />
+        <el-table-column
+          prop="workingState"
+          label="到期时间"
           width="150"
         >
         </el-table-column>
         <el-table-column
           fixed="right"
           label="操作"
-          width="200"
+          width="140"
         >
           <template slot-scope="scope">
-            <el-button type="text" size="small" @click="look(scope.$index)">查看</el-button>
-            <el-button type="text" size="small" @click="update(scope.$index)">编辑</el-button>
+            <el-button type="text" size="small" @click="searchMore(scope.$index)">修改</el-button>
+            <el-button type="text" size="small" @click="deleteMember(scope.$index)">删除</el-button>
           </template>
         </el-table-column>
       </el-table>
@@ -184,6 +187,10 @@
         />
       </div>
     </div>
+
+
+
+
   </div>
 </template>
 
@@ -220,29 +227,19 @@
           oId: '',
           name: ''
         }],
-        bianji: false,
+        dialogFormVisible: false,
         form: {
-          oId: '',
-          staffNumber: '',
-          staffName: '',
-          staffTel: '',
-          organizationName: '',
-          positionName: '',
-          status: ''
+          departmentName: '',
+          departmentId: ''
         },
       }
     },
     created() {
-        this.selectAll(),
-          this.getPositions();
-       this.getOrganization();
+      this.selectAll(),
+        this.getPositions();
+      this.getOrganization();
     },
     methods: {
-      look(){
-        this.$router.push({
-          path: '/staff/staff_message'
-        });
-      },
       selectAll() {
         const workThis = this
         // console.log('从cookie中获取的商户Id是：' + workThis.merchantId)
@@ -252,9 +249,9 @@
           url: 'api/consumer/getStaffList',
           data: {
 
-              'pageNumber': workThis.pageNum,
-              'pageSize' : workThis.pageSize,
-              'staffTel': workThis.staffTel,
+            'pageNumber': workThis.pageNum,
+            'pageSize' : workThis.pageSize,
+            'staffTel': workThis.staffTel,
             'organizationOId': workThis.organizationOId,
             'positionOId': workThis.positionOId,
             'staffName': workThis.staffName,
@@ -267,17 +264,13 @@
           workThis.totalCount = res.data.data.total
         })
       },
-      update(index) {
-        const workThis = this
-        workThis.bianji = true
-        workThis.form.staffId = workThis.tableData[index].staffId
-        workThis.form.staffNumber = workThis.tableData[index].staffNumber
-        workThis.form.staffName = workThis.tableData[index].staffName
-        workThis.form.staffTel = workThis.tableData[index].staffTel
-        workThis.form.organizationName = workThis.tableData[index].organizationName
-        workThis.form.positionName = workThis.tableData[index].positionName
-        workThis.form.workingState = workThis.tableData[index].workingState
+      append() {
+        this.dialogFormVisible = true
       },
+      insertFalse(){
+        this.dialogFormVisible = false
+      },
+
       handleSizeChange(val) {
         const workThis = this
         workThis.pageSize = val

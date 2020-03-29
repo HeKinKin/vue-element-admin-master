@@ -13,7 +13,7 @@
         <tr>
           <td colspan="2" rowspan="3"><input type="file" name="staffImg" /></td>
           <td>员工号</td>
-          <td><input type="text" v-model="formMess.staffNumber"/></td>
+          <td><input type="text" v-model="formMess.staffId"/></td>
           <td>姓名</td>
           <td><input type="text" v-model="formMess.staffName"/></td>
           <td>民族</td>
@@ -41,6 +41,9 @@
           <td>学历</td>
           <td>
             <select v-model="formMess.staffEducation">
+              <option value="本科">博士后</option>
+              <option value="本科">博士</option>
+              <option value="本科">硕士</option>
               <option value="本科">本科</option>
               <option value="大专">大专</option>
               <option value="高中">高中</option>
@@ -55,16 +58,14 @@
         <tr>
           <td>部门</td>
           <td>
-            <select v-model="formMess.departmentId">
-              <option value="001">人事部</option>
-              <option value="002">财务部</option>
-              <option value="003">保安部</option>
+            <select v-model="formMess.departmentOId" >
+              <option v-for="(item,index) in organizationList"  :value="item.oId">{{ item.name }}</option>
             </select>
           </td>
           <td>职位</td>
           <td>
-            <select v-model="formMess.positionId" >
-              <option v-for="(item,index) in positionList"  :value="item.positionid">{{ item.positionname }}</option>
+            <select v-model="formMess.positionOId" >
+              <option v-for="(item,index) in positionList"  :value="item.oId">{{ item.name }}</option>
             </select>
           </td>
           <td>入职时间</td>
@@ -98,7 +99,7 @@
     data() {
       return {
         formMess:{
-          staffNumber: "",
+          staffId: "",
           staffName: "",
           nationality:"",
           staffBirthday:"",
@@ -107,22 +108,27 @@
           staffEducation:"",
           staffEmail:"",
           staffTel:"",
-          positionId:"",
-          departmentId:"",
+          positionOId:"",
+          departmentOId:"",
           entryTime:"",
           graduatedSchool:"",
           staffAddress:""},
         positionList:[{
-          positionid: '',
-          positionname: ''
+          oId: '',
+          name: ''
         }
-        ]
+        ],
+        organizationList:[{
+          oId: '',
+          name: ''
+        }]
 
     }
     },
 
     created() {
       this.getPositions();
+      this.getOrganization();
     },
 
     methods: {
@@ -140,7 +146,7 @@
 
         axios({
           method:"post",
-          url:"/api/manage/staff/add",
+          url:"/api/consumer/addStaff",
           headers: {
             "Content-Type": "multipart/form-data"
           },
@@ -168,7 +174,18 @@
           data: {
           }
         }).then(function(res) {
-          workThis.positionList = res.data.data
+          workThis.positionList = res.data.data.list
+        })
+      },
+      getOrganization() {
+        const workThis = this
+        workThis.$axios({
+          method: 'post',
+          url: 'api/consumer/getDepartment',
+          data: {
+          }
+        }).then(function(res) {
+          workThis.organizationList = res.data.data.list
         })
       }
     }
