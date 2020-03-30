@@ -128,43 +128,55 @@
           fixed
           prop="oId"
           label="OID"
-          width="180"
+          width="240"
         />
         <el-table-column
           prop="staffNumber"
           label="工号"
-          width="130"
+          width="110"
         />
         <el-table-column
           prop="staffName"
           label="姓名"
-          width="130"
+          width="110"
         />
         <el-table-column
           prop="staffTel"
           label="手机号"
-          width="130"
+          width="110"
         />
         <el-table-column
           prop="organizationName"
           label="部门编号"
-          width="130"
+          width="110"
         />
         <el-table-column
           prop="positionName"
           label="职位"
-          width="150"
+          width="110"
         />
         <el-table-column
           prop="status"
           label="是否在职"
-          width="150"
+          width="110"
+        >
+        </el-table-column>
+        <el-table-column
+          prop="graduatedSchool"
+          label="毕业院校"
+          width="110"
+        >
+        </el-table-column>
+        <el-table-column
+          prop="email"
+          label="邮箱"
+          width="110"
         >
         </el-table-column>
         <el-table-column
           fixed="right"
           label="操作"
-          width="200"
+          width="100"
         >
           <template slot-scope="scope">
             <el-button type="text" size="small" @click="look(scope.$index)">查看</el-button>
@@ -238,10 +250,15 @@
        this.getOrganization();
     },
     methods: {
-      look(){
+      look(index){
+        let workThis = this;
         this.$router.push({
-          path: '/staff/staff_message'
+          path: '/staff/staff_message',
+          query: {
+            oid: workThis.tableData[index].oId,
+          }
         });
+
       },
       selectAll() {
         const workThis = this

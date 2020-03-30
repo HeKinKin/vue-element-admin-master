@@ -98,7 +98,8 @@ export default {
     contract: '职内信息管理',
     contractHome: '员工合同管理',
     money: '薪资管理',
-    check: '考勤信息管理'
+    check: '考勤信息管理',
+    staff_message: '员工档案详情'
   },
   navbar: {
     dashboard: '首页',

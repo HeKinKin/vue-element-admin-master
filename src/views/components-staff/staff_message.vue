@@ -136,7 +136,7 @@
           data: {
             'pageNumber': 1,
             'pageSize' : 1,
-            'oId': 'c45d4bc145404b3babb90bb5c19005c3'
+            'oId': workThis.$route.query.oid
 
           }
         }).then(function(res) {
