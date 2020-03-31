@@ -216,10 +216,6 @@
       this.selectMessage()
       this.getOrganization()
     },
-
-    components: {
-      CountTo
-    },
     methods: {
       updateStaff(){
         const workThis = this
@@ -231,7 +227,7 @@
             'organizationOId':workThis.organizationOId
           }
         }).then(function(res) {
-          // workThis.selectAll()
+          workThis.selectAll()
           workThis.selectMessage()
           workThis.getOrganization()
           workThis.$message({
