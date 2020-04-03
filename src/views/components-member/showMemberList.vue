@@ -35,7 +35,8 @@
                 <el-option
                   v-for="item in allStoresInSelect"
                   :label="item.dictionaryValue"
-                  :value="item.dictionaryKey"></el-option>
+                  :value="item.dictionaryKey"
+                />
                 <el-option style="width: auto" :disabled="true" :value="null">
                   <span>无</span>
                 </el-option>
@@ -99,7 +100,7 @@
                 </el-upload>
                 <div slot="footer" class="dialog-footer">
                   <el-button @click="insertfalse1">返回</el-button>
-                  <!--<el-button type="primary" @click="insert">确 定</el-button>-->
+                  <!--                  <el-button type="primary" @click="insert">确 定</el-button>-->
                 </div>
               </el-dialog>
 
@@ -127,11 +128,11 @@
                       type="date"
                       placeholder="选择日期"
                     />
-                  </el-form-item ><br><br>
-                   <el-form-item label="性别:" size="medium">
-                  <el-radio v-model="radio" label="1">男</el-radio>
-                  <el-radio v-model="radio" label="2">女</el-radio>
-                      </el-form-item >
+                  </el-form-item><br><br>
+                  <el-form-item label="性别:" size="medium">
+                    <el-radio v-model="radio" label="1">男</el-radio>
+                    <el-radio v-model="radio" label="2">女</el-radio>
+                  </el-form-item>
                 </el-form>
                 <div slot="footer" class="dialog-footer">
                   <el-button @click="insertfalse">取 消</el-button>
@@ -683,7 +684,7 @@ export default {
         url: 'http://localhost:61116/level/select',
         data: {
           'body': {
-            'merchantId': workThis.merchantId,
+            'merchantId': workThis.merchantId
           }
           // headers: {
           //   'Authorization': workThis.sessionId

@@ -22,6 +22,11 @@ const contractRouter = {
       component: () => import('@/views/components-contract/money'),
       name: 'money',
       meta: { title: 'money' }
+    }, {
+      path: 'moneyProtect',
+      component: () => import('@/views/components-contract/moneyProtect'),
+      name: 'moneyProtect',
+      meta: { title: 'moneyProtect' }
     },
     {
       path: 'check',

@@ -7,7 +7,7 @@ function resolve(dir) {
 }
 
 const name = defaultSettings.title || 'vue Element Admin' // page title
-const port = 8082 // dev port
+const port = 8088 // dev port
 
 // All configuration item explanations can be find in https://cli.vuejs.org/config/
 module.exports = {
@@ -40,11 +40,11 @@ module.exports = {
           ['^' + process.env.VUE_APP_BASE_API]: ''
         }
       },
-      "/api":{
+      '/api': {
         target: 'http://localhost:8003',
         changeOrigin: true,
         pathRewrite: {
-          '^/api':''
+          '^/api': ''
         }
       }
     },

@@ -1,5 +1,26 @@
 <template>
   <div style="width: 1230px" class="crm">
+    <div>
+      <el-form>
+        <el-form-item>
+          <el-button type="primary" size="mini" @click="append">新增职位</el-button>
+        </el-form-item>
+      </el-form>
+      <el-dialog title="新增职位" :visible.sync="dialogFormVisible">
+        <el-form size="mini">
+          <el-form-item label="职位:">
+            <el-input
+              v-model="insert.name"
+              clearable
+            />
+          </el-form-item>
+        </el-form>
+        <div slot="footer" class="dialog-footer">
+          <el-button @click="insertFalse">取 消</el-button>
+          <el-button type="primary" @click="insert11()">确 定</el-button>
+        </div>
+      </el-dialog>
+    </div>
 
     <div style="margin-top:10px;margin-left:10px;margin-top: 20px">
       <div style="margin-top: 20px" />
@@ -54,82 +75,111 @@
 </template>
 
 <script>
-  import Vue from 'vue'
-  import ElementUI from 'element-ui'
-  import 'element-ui/lib/theme-chalk/index.css'
-  import vuerouter from 'vue-router'
-  Vue.use(vuerouter)
-  Vue.use(ElementUI)
+import Vue from 'vue'
+import ElementUI from 'element-ui'
+import 'element-ui/lib/theme-chalk/index.css'
+import vuerouter from 'vue-router'
+Vue.use(vuerouter)
+Vue.use(ElementUI)
 
-  import axios from 'axios'
-  Vue.prototype.$axios = axios
+import axios from 'axios'
+Vue.prototype.$axios = axios
 
-  export default {
-    data() {
-      return {
-        totalCount: '',
-        pageNum: 1,
-        pageSize: 10,
-        tableData:[]
-      }
+export default {
+  data() {
+    return {
+      insert: {
+        id: '',
+        name: ''
+      },
+      dialogFormVisible: false,
+
+      totalCount: '',
+      pageNum: 1,
+      pageSize: 10,
+      tableData: []
+    }
+  },
+  created() {
+    this.selectAll()
+  },
+  methods: {
+    append() {
+      this.dialogFormVisible = true
     },
-    created() {
-      this.selectAll()
+    insertFalse() {
+      this.dialogFormVisible = false
     },
-    methods: {
-      selectAll() {
-        const workThis = this
+    insert11() {
+      const workThis = this
+      workThis.$axios({
+        method: 'post',
+        url: 'api/consumer/insertPosition',
+        data: {
+          'name': workThis.insert.name
+        }
+      }).then(function(res) {
+        workThis.selectAll()
+        workThis.dialogFormVisible = false
+        workThis.$message({
+          type: 'success',
+          message: '新增成功！！'
+        })
+      })
+    },
+    selectAll() {
+      const workThis = this
+      workThis.$axios({
+        method: 'post',
+        url: 'api/consumer/getPosition',
+        data: {
+          'pageNumber': workThis.pageNum,
+          'pageSize': workThis.pageSize
+        }
+      }).then(function(res) {
+        workThis.tableData = res.data.data.list
+        workThis.totalCount = res.data.data.total
+      })
+    },
+    deleteMember(index) {
+      const workThis = this
+      this.$confirm('此操作将永久删除该文件, 是否继续?', '提示', {
+        confirmButtonText: '确定',
+        cancelButtonText: '取消',
+        type: 'warning'
+      }).then(() => {
         workThis.$axios({
           method: 'post',
-          url: 'api/consumer/getPosition',
+          url: 'api/consumer/deletePosition',
           data: {
-            'pageNumber': workThis.pageNum,
-            'pageSize' : workThis.pageSize,
+            'oId': workThis.tableData[index].oId
           }
         }).then(function(res) {
-          workThis.tableData = res.data.data.list
-          workThis.totalCount = res.data.data.total
-        })
-      },
-      deleteMember(index) {
-        const workThis = this
-        this.$confirm('此操作将永久删除该文件, 是否继续?', '提示', {
-          confirmButtonText: '确定',
-          cancelButtonText: '取消',
-          type: 'warning'
-        }).then(() => {
-          workThis.$axios({
-            method: 'post',
-            url: 'api/consumer/deletePosition',
-            data: {
-                'oId': workThis.tableData[index].oId
-            }
-          }).then(function(res) {
-            workThis.selectAll()
-            workThis.$message({
-              type: 'success',
-              message: '删除成功!'
-            })
-          })
-        }).catch(() => {
+          workThis.selectAll()
           workThis.$message({
-            type: 'info',
-            message: '已取消删除'
+            type: 'success',
+            message: '删除成功!'
           })
         })
-      },
-      handleSizeChange(val) {
-        const workThis = this
-        workThis.pageSize = val
-        workThis.selectAll()
-      },
-      handleCurrentChange(val) {
-        const workThis = this
-        workThis.pageNum = val
-        workThis.selectAll()
-      }
+      }).catch(() => {
+        workThis.$message({
+          type: 'info',
+          message: '已取消删除'
+        })
+      })
+    },
+    handleSizeChange(val) {
+      const workThis = this
+      workThis.pageSize = val
+      workThis.selectAll()
+    },
+    handleCurrentChange(val) {
+      const workThis = this
+      workThis.pageNum = val
+      workThis.selectAll()
     }
   }
+}
 </script>
 
 <style scoped>
@@ -137,6 +187,5 @@
     background: #f2f2f2 !important;
     font-size: large;
   }
-
 
 </style>

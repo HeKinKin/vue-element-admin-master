@@ -1,70 +1,6 @@
 <template>
   <div>
-    <el-row :gutter="40" class="panel-group">
-      <el-col :xs="12" :sm="12" :lg="6" class="card-panel-col">
-        <div class="card-panel" @click="handleSetLineChartData('newVisitis')">
-          <div class="card-panel-icon-wrapper icon-people">
-            <svg-icon icon-class="peoples" class-name="card-panel-icon" />
-          </div>
-          <div class="card-panel-description">
-            <div class="card-panel-text">
-              当月迟到
-            </div>
-            <count-to :start-val="0" :end-val="indexResult.lateDayNum" :duration="2600" class="card-panel-num" />
-          </div>
-        </div>
-      </el-col>
-      <el-col :xs="12" :sm="12" :lg="6" class="card-panel-col">
-        <div class="card-panel" @click="handleSetLineChartData('messages')">
-          <div class="card-panel-icon-wrapper icon-message">
-            <svg-icon icon-class="message" class-name="card-panel-icon" />
-          </div>
-          <div class="card-panel-description">
-            <div class="card-panel-text">
-              当月早退
-            </div>
-            <count-to :start-val="0" :end-val="indexResult.lateEarlyDayNum" :duration="3000" class="card-panel-num" />
-          </div>
-        </div>
-      </el-col>
-      <el-col :xs="12" :sm="12" :lg="6" class="card-panel-col">
-        <div class="card-panel" @click="handleSetLineChartData('purchases')">
-          <div class="card-panel-icon-wrapper icon-money">
-            <svg-icon icon-class="money" class-name="card-panel-icon" />
-          </div>
-          <div class="card-panel-description">
-            <div class="card-panel-text">
-              当月请假
-            </div>
-            <count-to :start-val="0" :end-val="indexResult.leaveDayNum" :duration="3200" class="card-panel-num" />
-          </div>
-        </div>
-      </el-col>
-    </el-row>
-
-    <el-dialog title="批量导入当月考勤信息" :visible.sync="dialogFormVisible1">
-      <el-upload
-        class="upload-demo"
-        drag
-        :action="importFileUrl"
-        :auto-upload="true"
-        :on-success="uploadSuccess"
-        :on-error="uploadError"
-        :multiple="true"
-        :limit="1"
-        :before-upload="beforeAvatarUpload"
-        accept=".xlsx,.xls"
-      >
-        <i class="el-icon-upload" />
-        <div class="el-upload__text">将文件拖到此处，或<em>点击上传</em></div>
-        <div slot="tip" class="el-upload__tip">只能上传xlsx或xls文件</div>
-      </el-upload>
-      <div slot="footer" class="dialog-footer">
-        <el-button @click="insertfalse1">返回</el-button>
-      </div>
-    </el-dialog>
-
-    <div style="">
+    <div style="margin-top: 50px">
       <div style="margin-left: 10px">
         <el-form :inline="true" class="demo-form-inline">
           <el-form-item label="姓名">
@@ -91,29 +27,30 @@
           </span>
         </el-form>
       </div>
+
       <el-dialog title="修改合同" :visible.sync="bianji">
         <el-form ref="form" :model="form" size="mini">
-          <el-form-item label="正常天数">
+          <el-form-item label="基本工资">
             <el-input
-              v-model="contract.finishDay"
+              v-model="contract.basicMoney"
               clearable
             />
           </el-form-item>
-          <el-form-item label="迟到天数">
+          <el-form-item label="饭补">
             <el-input
-              v-model="contract.lateDay"
+              v-model="contract.food"
               clearable
             />
           </el-form-item>
-          <el-form-item label="早退天数">
+          <el-form-item label="奖金">
             <el-input
-              v-model="contract.lateEarlyDay"
+              v-model="contract.bonus"
               clearable
             />
           </el-form-item>
-          <el-form-item label="请假天数">
+          <el-form-item label="交通补助">
             <el-input
-              v-model="contract.leaveDay"
+              v-model="contract.traffic"
               clearable
             />
           </el-form-item>
@@ -130,14 +67,10 @@
 
     <el-form>
       <el-form-item>
-        <el-button type="primary" size="mini" @click="downloadExcel">考勤模板下载</el-button>
+        <el-button type="primary" size="mini" @click="importExcel">工资模板导出</el-button>
       </el-form-item>
     </el-form>
-    <el-form>
-      <el-form-item>
-        <el-button type="primary" size="mini" @click="importExcel">批量导入当月考勤信息</el-button>
-      </el-form-item>
-    </el-form>
+
     <div style="margin-top:10px;margin-left:10px;margin-top: 22px">
       <div style="margin-top: 20px" />
       <el-table
@@ -150,7 +83,7 @@
       >
         <el-table-column
           type="selection"
-          width="50"
+          width="80"
         />
         <el-table-column
           prop="oId"
@@ -168,29 +101,28 @@
           width="200"
         />
         <el-table-column
-          prop="monthMessage"
-          label="月份"
+          prop="realMoney"
+          label="总薪资"
           width="200"
         />
         <el-table-column
-          prop="finishDay"
-          label="正常天数"
+          prop="basicMoney"
+          label="基本工资"
           width="200"
         />
         <el-table-column
-          prop="lateDay"
-          label="迟到天数"
+          prop="food"
+          label="饭补"
           width="200"
         />
         <el-table-column
-          prop="lateEarlyDay"
-          label="早退天数"
+          prop="bonus"
+          label="奖金"
           width="200"
         />
-
         <el-table-column
-          prop="leaveDay"
-          label="请假天数"
+          prop="traffic"
+          label="交通补助"
           width="200"
         />
         <el-table-column
@@ -237,13 +169,15 @@ export default {
   data() {
     return {
       contract: {
-        finishDay: 0,
-        lateDay: 0,
-        lateEarlyDay: 0,
-        leaveDay: 0,
-        oId: ''
+        food: 0,
+        basicMoney: 0,
+        traffic: 0,
+        bonus: 0,
+        oIdoId: ''
       },
-      importFileUrl: 'api/consumer/uploadCheckWork',
+      staffName: '',
+      staffNumber: null,
+      importFileUrl: 'api/consumer/filesUpload',
       tableData: [{
         status: ''
       }],
@@ -254,14 +188,16 @@ export default {
       todayNum: 0,
       totalLeave: 20,
       dialogFormVisible1: false,
-      staffName: '',
-      staffNumber: null,
-      bianji: false,
       indexResult: {
-        'lateDayNum': 0,
-        'lateEarlyDayNum': 0,
-        'leaveDayNum': 0
-      }
+        'bonus': 0,
+        'totalMoney': 0,
+        'currentMoney': 0,
+        'totalNeed': 0
+      },
+      formMess: {
+        file: ''
+      },
+      bianji: false
     }
   },
 
@@ -270,11 +206,98 @@ export default {
     this.selectIndex()
   },
   methods: {
-    downloadExcel() {
+    updateContract() {
+      const workThis = this
+      workThis.$axios({
+        method: 'post',
+        url: 'api/consumer/updateMoneySetting',
+        data: {
+          'basicMoney': Number(workThis.contract.basicMoney),
+          'food': Number(workThis.contract.food),
+          'bonus': Number(workThis.contract.bonus),
+          'traffic': Number(workThis.contract.traffic),
+          'oId': workThis.contract.oIdoId
+        }
+      }).then(function(res) {
+        workThis.bianji = false
+        workThis.selectAll()
+        workThis.selectIndex()
+        workThis.$message({
+          type: 'success',
+          message: '更新成功！！'
+        })
+      })
+    },
+    update(index) {
+      const workThis = this
+      workThis.contract.food = workThis.tableData[index].food
+      workThis.contract.basicMoney = workThis.tableData[index].basicMoney
+      workThis.contract.traffic = workThis.tableData[index].traffic
+      workThis.contract.bonus = workThis.tableData[index].bonus
+      workThis.contract.oIdoId = workThis.tableData[index].oId
+      workThis.bianji = true
+    },
+    // 上传成功后的回调
+    uploadSuccess(response, file, fileList) {
+      console.log('上传文件', response.header.code)
+      if (response.header.code === '11111') {
+        this.$message({
+          type: 'warning',
+          message: response.header.message
+        })
+      }
+      if (response.header.code === '10000') {
+        this.$message({
+          type: 'success',
+          message: response.header.message
+        })
+        this.dialogFormVisible1 = false
+        this.selectAll()
+      }
+      // this.$message({
+      //   type: 'success',
+      //   message: '上传成功！!'
+      // });
+    },
+    // 上传错误
+    uploadError(response, file, fileList) {
+      console.log('上传失败，请重试！', response)
+      this.$message({
+        type: 'warning',
+        message: '上传失败，请重试!'
+      })
+    },
+    beforeAvatarUpload(file) {
+      const extension = file.name.split('.')[1] === 'xls'
+      const extension2 = file.name.split('.')[1] === 'xlsx'
+      const extension3 = file.name.split('.')[1] === 'doc'
+      const extension4 = file.name.split('.')[1] === 'docx'
+      const isLt2M = file.size / 1024 / 1024 < 10
+      if (!extension && !extension2 && !extension3 && !extension4) {
+        console.log('上传模板只能是 xls、xlsx、doc、docx 格式!')
+        this.$message({
+          type: 'warning',
+          message: '上传模板只能是 xls、xlsx、doc、docx 格式!!'
+        })
+      }
+      if (!isLt2M) {
+        console.log('上传模板大小不能超过 10MB!')
+        this.$message({
+          type: 'warning',
+          message: '上传模板大小不能超过 10MB!'
+        })
+      }
+      return extension || extension2 || extension3 || extension4 && isLt2M
+    },
+    insertfalse1() {
+      const workThis = this
+      workThis.dialogFormVisible1 = false
+    },
+    importExcel() {
       const workThis = this
       workThis.$axios({
         method: 'GET',
-        url: 'api/consumer/downloadCheckWorkForExcel',
+        url: 'api/consumer/downloadMoneySettingForExcel',
         data: {
         },
         responseType: 'blob'
@@ -288,7 +311,7 @@ export default {
         for (let i = 0; i < 10; i++) {
           num += Math.ceil(Math.random() * 10)
         }
-        link.setAttribute('download', 'AttendanceTemplate' + '.xlsx')
+        link.setAttribute('download', 'salaryTemplate' + '.xlsx')
         document.body.appendChild(link)
         link.click()
         document.body.removeChild(link)
@@ -300,61 +323,11 @@ export default {
         console.log(error)
       })
     },
-    selectIndex() {
-      const workThis = this
-      workThis.$axios({
-        method: 'post',
-        url: 'api/consumer/getCheckWorkNum',
-        data: {
-        }
-      }).then(function(res) {
-        workThis.indexResult = res.data.data
-      })
-    },
-    updateContract() {
-      const workThis = this
-      workThis.$axios({
-        method: 'post',
-        url: 'api/consumer/updateCheckWork',
-        data: {
-          'finishDay': Number(workThis.contract.finishDay),
-          'lateDay': Number(workThis.contract.lateDay),
-          'lateEarlyDay': Number(workThis.contract.lateEarlyDay),
-          'leaveDay': Number(workThis.contract.leaveDay),
-          'oId': workThis.contract.oId
-        }
-      }).then(function(res) {
-        workThis.bianji = false
-        workThis.selectAll(),
-        workThis.this.selectIndex(),
-        workThis.$message({
-          type: 'success',
-          message: '更新成功！！'
-        })
-      })
-    },
-    update(index) {
-      const workThis = this
-      workThis.bianji = true
-      workThis.contract.finishDay = workThis.tableData[index].finishDay
-      workThis.contract.lateDay = workThis.tableData[index].lateDay
-      workThis.contract.lateEarlyDay = workThis.tableData[index].lateEarlyDay
-      workThis.contract.leaveDay = workThis.tableData[index].leaveDay
-      workThis.contract.oId = workThis.tableData[index].oId
-    },
-    insertfalse1() {
-      const workThis = this
-      workThis.dialogFormVisible1 = false
-    },
-    importExcel() {
-      const workThis = this
-      workThis.dialogFormVisible1 = true
-    },
     selectAll() {
       const workThis = this
       workThis.$axios({
         method: 'post',
-        url: 'api/consumer/getCheckWork',
+        url: 'api/consumer/getMoneySetting',
         data: {
           'pageNumber': workThis.pageNum,
           'pageSize': workThis.pageSize,
@@ -364,6 +337,17 @@ export default {
       }).then(function(res) {
         workThis.tableData = res.data.data.list
         workThis.totalCount = res.data.data.total
+      })
+    },
+    selectIndex() {
+      const workThis = this
+      workThis.$axios({
+        method: 'post',
+        url: 'api/consumer/getMoneyIndex',
+        data: {
+        }
+      }).then(function(res) {
+        workThis.indexResult = res.data.data
       })
     },
     handleSetLineChartData(type) {

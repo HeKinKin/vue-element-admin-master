@@ -77,7 +77,7 @@ export default {
     cancelCouponDetails: '注券记录',
     cancelCouponMore: '注券详情',
     editCouponTemplate: '编辑券模板',
-    insertCouponTemplate:'新增券模板',
+    insertCouponTemplate: '新增券模板',
     onlyCampaignList: '编辑营销活动',
     campaignDetails: '活动详情',
     couponList: '优惠券列表',
@@ -99,7 +99,8 @@ export default {
     contractHome: '员工合同管理',
     money: '薪资管理',
     check: '考勤信息管理',
-    staff_message: '员工档案详情'
+    staff_message: '员工档案详情',
+    moneyProtect: '薪资维护'
   },
   navbar: {
     dashboard: '首页',

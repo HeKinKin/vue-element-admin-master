@@ -39,7 +39,6 @@ export default [
           message: 'Account and password are incorrect.'
         }
       }
-
       return {
         code: 20000,
         data: token

@@ -10,7 +10,7 @@
             <div class="card-panel-text">
               当月应发薪资
             </div>
-            <count-to :start-val="0" :end-val="todayNum" :duration="2600" class="card-panel-num" />
+            <count-to :start-val="0" :end-val="indexResult.currentMoney" :duration="2600" class="card-panel-num" />
           </div>
         </div>
       </el-col>
@@ -23,7 +23,7 @@
             <div class="card-panel-text">
               总发放薪资
             </div>
-            <count-to :start-val="0" :end-val="totalNum" :duration="3000" class="card-panel-num" />
+            <count-to :start-val="0" :end-val="indexResult.totalMoney" :duration="3000" class="card-panel-num" />
           </div>
         </div>
       </el-col>
@@ -36,7 +36,7 @@
             <div class="card-panel-text">
               当月奖金发放
             </div>
-            <count-to :start-val="0" :end-val="totalLeave" :duration="3200" class="card-panel-num" />
+            <count-to :start-val="0" :end-val="indexResult.bonus" :duration="3200" class="card-panel-num" />
           </div>
         </div>
       </el-col>
@@ -49,13 +49,70 @@
             <div class="card-panel-text">
               当月补贴发放
             </div>
-            <count-to :start-val="0" :end-val="totalLeave" :duration="3200" class="card-panel-num" />
+            <count-to :start-val="0" :end-val="indexResult.totalNeed" :duration="3200" class="card-panel-num" />
           </div>
         </div>
       </el-col>
     </el-row>
 
-    <div style="margin-top:10px;margin-left:10px;margin-top: -22px">
+    <div style="">
+      <div style="margin-left: 10px">
+        <el-form :inline="true" class="demo-form-inline">
+          <el-form-item label="姓名">
+            <el-input
+              v-model="staffName"
+              placeholder="请输入姓名"
+              clearable
+              size="mini"
+            />
+          </el-form-item>
+          <el-form-item label="员工工号">
+            <el-input
+              v-model.trim="staffNumber"
+              placeholder="请输入工号"
+              clearable
+              size="mini"
+            />
+          </el-form-item>
+
+          <span style="margin-left: 50px">
+            <el-form-item>
+              <el-button type="primary" size="mini" @click="selectAll">查询</el-button>
+            </el-form-item>
+          </span>
+        </el-form>
+      </div>
+    </div>
+
+    <el-form>
+      <el-form-item>
+        <el-button type="primary" size="mini" @click="importExcel">批量导入当月工资</el-button>
+      </el-form-item>
+    </el-form>
+
+    <el-dialog title="批量导入当月工资" :visible.sync="dialogFormVisible1">
+      <el-upload
+        class="upload-demo"
+        drag
+        :action="importFileUrl"
+        :auto-upload="true"
+        :on-success="uploadSuccess"
+        :on-error="uploadError"
+        :multiple="true"
+        :limit="1"
+        :before-upload="beforeAvatarUpload"
+        accept=".xlsx,.xls"
+      >
+        <i class="el-icon-upload" />
+        <div class="el-upload__text">将文件拖到此处，或<em>点击上传</em></div>
+        <div slot="tip" class="el-upload__tip">只能上传xlsx或xls文件</div>
+      </el-upload>
+      <div slot="footer" class="dialog-footer">
+        <el-button @click="insertfalse1">返回</el-button>
+      </div>
+    </el-dialog>
+
+    <div style="margin-top:10px;margin-left:10px;margin-top: 22px">
       <div style="margin-top: 20px" />
       <el-table
         v-loading="loading"
@@ -67,77 +124,58 @@
       >
         <el-table-column
           type="selection"
-          width="20"
+          width="30"
         />
         <el-table-column
-          fixed
           prop="staffId"
-          label="ID"
-          width="100"
-        />
-        <el-table-column
-          prop="staffNumber"
           label="工号"
-          width="100"
+          width="150"
         />
         <el-table-column
           prop="staffName"
           label="姓名"
-          width="100"
+          width="150"
         />
         <el-table-column
-          prop="staffTel"
-          label="部门"
-          width="120"
-        />
-        <el-table-column
-          prop="organizationName"
+          prop="month"
           label="日期"
-          width="130"
+          width="150"
         />
         <el-table-column
-          prop="positionName"
+          prop="basicMoney"
           label="基本工资"
-          width="130"
+          width="150"
         />
         <el-table-column
-          prop="positionName"
-          label="奖金"
-          width="130"
+          prop="insurance"
+          label="五险"
+          width="150"
         />
         <el-table-column
-          prop="positionName"
-          label="五险一金"
-          width="130"
+          prop="accumulation"
+          label="公积金"
+          width="150"
         />
         <el-table-column
-          prop="positionName"
+          prop="food"
           label="饭补"
-          width="130"
+          width="150"
         />
         <el-table-column
-          prop="workingState"
-          label="罚款"
-          width="100"
+          prop="bonus"
+          label="奖金"
+          width="150"
         />
-          <el-table-column
-            prop="workingState"
-            label="应发工资"
-            width="100"
-          />
-            <el-table-column
-              prop="workingState"
-              label="实发工资"
-              width="100"
-            />
         <el-table-column
-          label="操作"
-          width="120"
-        >
-          <template slot-scope="scope">
-            <el-button type="text" size="small" @click="update(scope.$index)">修改</el-button>
-          </template>
-        </el-table-column>
+          prop="traffic"
+          label="交通补助"
+          width="200"
+        />
+        <el-table-column
+          prop="realMoney"
+          label="实发工资"
+          width="200"
+        />
       </el-table>
       <div style="padding-left:600px">
         <el-pagination
@@ -155,63 +193,145 @@
 </template>
 
 <script>
-  import CountTo from 'vue-count-to'
-  import Vue from 'vue';
-  import ElementUI from 'element-ui';
-  import 'element-ui/lib/theme-chalk/index.css';
-  import axios from 'axios';
-  import vuerouter from 'vue-router';
-  Vue.use(vuerouter)
-  Vue.prototype.$axios = axios;
-  Vue.use(ElementUI);
+import CountTo from 'vue-count-to'
+import Vue from 'vue'
+import ElementUI from 'element-ui'
+import 'element-ui/lib/theme-chalk/index.css'
+import axios from 'axios'
+import vuerouter from 'vue-router'
+Vue.use(vuerouter)
+Vue.prototype.$axios = axios
+Vue.use(ElementUI)
 
-  export default {
-    data() {
-      return {
-        tableData: [{
-          status: ''
-        }],
-        totalCount: '',
-        pageNum: 1,
-        pageSize: 10,
-        totalNum: 100,
-        todayNum: 0,
-        totalLeave: 20
-      }
-    },
+export default {
 
-    created() {
-      this.selectAll()
-    },
-
-    components: {
-      CountTo
-    },
-    methods: {
-      selectAll() {
-        const workThis = this
-        workThis.$axios({
-          method: 'post',
-          url: 'api/consumer/getStaffList',
-          data: {
-            'pageNumber': workThis.pageNum,
-            'pageSize' : workThis.pageSize,
-            'staffTel': workThis.staffTel,
-            'organizationOId': workThis.organizationOId,
-            'positionOId': workThis.positionOId,
-            'staffName': workThis.staffName,
-            'staffNumber': workThis.staffNumber,
-          }
-        }).then(function(res) {
-          workThis.tableData = res.data.data.list
-          workThis.totalCount = res.data.data.total
-        })
+  components: {
+    CountTo
+  },
+  data() {
+    return {
+      staffName: '',
+      staffNumber: null,
+      importFileUrl: 'api/consumer/filesUpload',
+      tableData: [{
+        status: ''
+      }],
+      totalCount: '',
+      pageNum: 1,
+      pageSize: 10,
+      totalNum: 100,
+      todayNum: 0,
+      totalLeave: 20,
+      dialogFormVisible1: false,
+      indexResult: {
+        'bonus': 0,
+        'totalMoney': 0,
+        'currentMoney': 0,
+        'totalNeed': 0
       },
-      handleSetLineChartData(type) {
-        this.$emit('handleSetLineChartData', type)
+      formMess: {
+        file: ''
       }
     }
+  },
+
+  created() {
+    this.selectAll(),
+    this.selectIndex()
+  },
+  methods: {
+    // 上传成功后的回调
+    uploadSuccess(response, file, fileList) {
+      console.log('上传文件', response.header.code)
+      if (response.header.code === '11111') {
+        this.$message({
+          type: 'warning',
+          message: response.header.message
+        })
+      }
+      if (response.header.code === '10000') {
+        this.$message({
+          type: 'success',
+          message: response.header.message
+        })
+        this.dialogFormVisible1 = false
+        this.selectAll()
+      }
+      // this.$message({
+      //   type: 'success',
+      //   message: '上传成功！!'
+      // });
+    },
+    // 上传错误
+    uploadError(response, file, fileList) {
+      console.log('上传失败，请重试！', response)
+      this.$message({
+        type: 'warning',
+        message: '上传失败，请重试!'
+      })
+    },
+    beforeAvatarUpload(file) {
+      const extension = file.name.split('.')[1] === 'xls'
+      const extension2 = file.name.split('.')[1] === 'xlsx'
+      const extension3 = file.name.split('.')[1] === 'doc'
+      const extension4 = file.name.split('.')[1] === 'docx'
+      const isLt2M = file.size / 1024 / 1024 < 10
+      if (!extension && !extension2 && !extension3 && !extension4) {
+        console.log('上传模板只能是 xls、xlsx、doc、docx 格式!')
+        this.$message({
+          type: 'warning',
+          message: '上传模板只能是 xls、xlsx、doc、docx 格式!!'
+        })
+      }
+      if (!isLt2M) {
+        console.log('上传模板大小不能超过 10MB!')
+        this.$message({
+          type: 'warning',
+          message: '上传模板大小不能超过 10MB!'
+        })
+      }
+      return extension || extension2 || extension3 || extension4 && isLt2M
+    },
+    insertfalse1() {
+      const workThis = this
+      workThis.dialogFormVisible1 = false
+    },
+    importExcel() {
+      const workThis = this
+      workThis.dialogFormVisible1 = true
+    },
+    selectAll() {
+      const workThis = this
+      workThis.$axios({
+        method: 'post',
+        url: 'api/consumer/getMoney',
+        data: {
+          'pageNumber': workThis.pageNum,
+          'pageSize': workThis.pageSize,
+          'Id': workThis.staffId,
+          'name': workThis.staffName
+        }
+      }).then(function(res) {
+        workThis.tableData = res.data.data.list
+        workThis.totalCount = res.data.data.total
+      })
+    },
+    selectIndex() {
+      const workThis = this
+      workThis.$axios({
+        method: 'post',
+        url: 'api/consumer/getMoneyIndex',
+        data: {
+        }
+      }).then(function(res) {
+        workThis.indexResult = res.data.data
+      })
+    },
+    handleSetLineChartData(type) {
+      this.$emit('handleSetLineChartData', type)
+    }
   }
+}
 </script>
 
 <style lang="scss" scoped>

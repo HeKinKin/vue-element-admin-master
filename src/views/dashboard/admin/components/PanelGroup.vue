@@ -9,7 +9,7 @@
           <div class="card-panel-text">
             员工总数
           </div>
-          <count-to :start-val="0" :end-val="102400" :duration="2600" class="card-panel-num" />
+          <count-to :start-val="0" :end-val="indexResult.staffTotal" :duration="2600" class="card-panel-num" />
         </div>
       </div>
     </el-col>
@@ -20,9 +20,9 @@
         </div>
         <div class="card-panel-description">
           <div class="card-panel-text">
-            考勤异常
+            今日入职
           </div>
-          <count-to :start-val="0" :end-val="19" :duration="3000" class="card-panel-num" />
+          <count-to :start-val="0" :end-val="indexResult.todayNum" :duration="3000" class="card-panel-num" />
         </div>
       </div>
     </el-col>
@@ -33,9 +33,9 @@
         </div>
         <div class="card-panel-description">
           <div class="card-panel-text">
-            当月薪资应发
+            当月应发薪资
           </div>
-          <count-to :start-val="0" :end-val="200000" :duration="3200" class="card-panel-num" />
+          <count-to :start-val="0" :end-val="indexResult.currentMoney" :duration="3200" class="card-panel-num" />
         </div>
       </div>
     </el-col>
@@ -46,9 +46,9 @@
         </div>
         <div class="card-panel-description">
           <div class="card-panel-text">
-            合同到期
+            当月请假
           </div>
-          <count-to :start-val="0" :end-val="35" :duration="3600" class="card-panel-num" />
+          <count-to :start-val="0" :end-val="indexResult.leaveDayNum" :duration="3600" class="card-panel-num" />
         </div>
       </div>
     </el-col>
@@ -57,14 +57,47 @@
 
 <script>
 import CountTo from 'vue-count-to'
+import Vue from 'vue'
+import ElementUI from 'element-ui'
+import 'element-ui/lib/theme-chalk/index.css'
+import axios from 'axios'
+import vuerouter from 'vue-router'
+Vue.use(vuerouter)
+Vue.prototype.$axios = axios
+Vue.use(ElementUI)
 
 export default {
+
   components: {
     CountTo
+  },
+  data() {
+    return {
+      indexResult: {
+        'staffTotal': 0,
+        'currentMoney': 0,
+        'todayNum': 0,
+        'leaveDayNum': 0
+      }
+    }
+  },
+
+  created() {
+    this.selectIndex()
   },
   methods: {
     handleSetLineChartData(type) {
       this.$emit('handleSetLineChartData', type)
+    },
+    selectIndex() {
+      const workThis = this
+      workThis.$axios({
+        method: 'post',
+        url: 'api/consumer/homeIndex',
+        data: {}
+      }).then(function(res) {
+        workThis.indexResult = res.data.data
+      })
     }
   }
 }
